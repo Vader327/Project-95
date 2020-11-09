@@ -1,13 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 export default class StartScreen extends React.Component {
+
   render(){
     return (
-      <View style={styles.container}>
-        <TouchableOpacity style={{borderWidth: 3, borderRadius: 50, padding: 7, width: '60%', alignItems: 'center'}}
+      <View style={{height: '100%', alignItems: 'center', backgroundColor: '#faae19'}}>
+        <StatusBar style="light" />
+        <Image source={require('../assets/logo.png')} style={{width: 150, height: 150, marginVertical: 20,}} />
+
+        <Text style={styles.title}>MindSpace</Text>
+        <Text style={styles.description}>An app to help children deal with intellectual disabilities.</Text>
+
+        <TouchableOpacity style={styles.button}
         onPress={()=>{this.props.navigation.navigate("ActivitySelectScreen")}}>
-          <Text>Start Quiz</Text>
+          <Text style={styles.buttonText}>Start Quiz</Text>
         </TouchableOpacity>
       </View>
     );
@@ -15,10 +23,33 @@ export default class StartScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  title:{
+    fontSize: 40,
+    color: 'white',
+    marginVertical: 10,
+    fontFamily: 'PoppinsBold',
   },
+  description:{
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 50,
+    fontSize: 20,
+    fontFamily: 'Poppins',
+  },
+  button:{
+    borderWidth: 3,
+    borderRadius: 50,
+    borderColor: 'white',
+    padding: 7,
+    width: '60%',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 50,
+    backgroundColor: 'white',
+  },
+  buttonText:{
+    color: '#faae19',
+    fontSize: 18,
+    fontFamily: 'PoppinsBold',
+  }
 });
