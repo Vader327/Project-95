@@ -47,10 +47,10 @@ const switchNavigator = createAnimatedSwitchNavigator({
   StartScreen: {screen: StartScreen},
   SelectScreen: {screen: createStackNavigator({
     ActivitySelectScreen: {screen: ActivitySelectScreen, navigationOptions: {headerShown: false}},
-    Screen1: {screen: Screen1, navigationOptions: {headerShown: false}},
-    Screen2: {screen: Screen2, navigationOptions: {headerShown: false}},
-    Screen3: {screen: Screen3, navigationOptions: {headerShown: false}},
-    Screen4: {screen: Screen4, navigationOptions: {headerShown: false}},
+    Screen1: {screen: Screen1, navigationOptions: {headerShown: false, gestureEnabled: false}},
+    Screen2: {screen: Screen2, navigationOptions: {headerShown: false, gestureEnabled: false}},
+    Screen3: {screen: Screen3, navigationOptions: {headerShown: false, gestureEnabled: false}},
+    Screen4: {screen: Screen4, navigationOptions: {headerShown: false, gestureEnabled: false}},
   })},
 }, {
   transition: (
