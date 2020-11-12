@@ -22,7 +22,7 @@ export default class Draggable extends React.Component {
           this.props.onDone(true);
           Animated.timing(this.state.objOpacity,{
             toValue: 0,
-            duration: 1000,
+            duration: 200,
             useNativeDriver: true,
           }).start();
         }
@@ -47,13 +47,13 @@ export default class Draggable extends React.Component {
   isDropArea(gesture){
     var objPos = this.objPos;
 
-    if(gesture.moveX*2>(objPos.x - 100) && gesture.moveX*2<(objPos.x + 100)){
-      return (gesture.moveY>(objPos.y - 100) && gesture.moveY<(objPos.y + 100) && 
-      gesture.moveX*2>(objPos.x - 100) && gesture.moveX*2<(objPos.x + 100));
+    if(gesture.moveX*2>(objPos.x - 80) && gesture.moveX*2<(objPos.x + 80)){
+      return (gesture.moveY>(objPos.y - 80) && gesture.moveY<(objPos.y + 80) && 
+      gesture.moveX*2>(objPos.x - 80) && gesture.moveX*2<(objPos.x + 80));
     }
     else{
-      return (gesture.moveY>(objPos.y - 100) && gesture.moveY<(objPos.y + 100) && 
-      gesture.moveX>(objPos.x - 100) && gesture.moveX<(objPos.x + 100));
+      return (gesture.moveY>(objPos.y - 80) && gesture.moveY<(objPos.y + 80) && 
+      gesture.moveX>(objPos.x - 80) && gesture.moveX<(objPos.x + 80));
     }
   }
 
@@ -71,8 +71,8 @@ export default class Draggable extends React.Component {
 
 const styles = StyleSheet.create({
   shape:{
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     alignSelf: 'center',
     margin: Dimensions.get("window").width/13,
   },

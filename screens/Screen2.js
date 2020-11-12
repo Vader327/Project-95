@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, PanResponder, Animated } from 'react-native';
 import Draggable from "../components/Draggable";
 
-export default class Screen1 extends React.Component {
+export default class Screen2 extends React.Component {
   constructor(){
     super();
     this.state={
@@ -16,7 +16,7 @@ export default class Screen1 extends React.Component {
     this.sqOp = new Animated.Value(1);
     this.trOp = new Animated.Value(1);
     this.stOp = new Animated.Value(1);
-    this.bttonPos = new Animated.Value(-50);
+    this.bttonScale = new Animated.Value(1);
   }
 
   measure=()=>{
@@ -45,15 +45,26 @@ export default class Screen1 extends React.Component {
     this.setState({doneArr: doneArr}, ()=>{
       Animated.timing(this[shape + "Op"], {
         toValue: 0,
-        duration: 1000,
+        duration: 200,
         useNativeDriver: true,
       }).start(()=>{
         if(doneArr.length==4){
-          Animated.timing(this.bttonPos, {
-            toValue: 50,
-            duration: 500,
-            useNativeDriver: false,
-          }).start()
+          Animated.loop(
+            Animated.sequence([
+              Animated.timing(this.bttonScale, {
+                toValue: 1.5,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+              Animated.spring(this.bttonScale, {
+                toValue: 1,
+                useNativeDriver: false,
+                duration: 500,
+                friction: 2,
+                tension: 70,
+              })
+            ]), {iterations: 2}
+          ).start();
         }
       });
     });
@@ -62,7 +73,7 @@ export default class Screen1 extends React.Component {
   render(){
     return(
       <View style={{height: '100%', backgroundColor: '#1c77ff'}}>
-        <Image source={require('../assets/logo.png')} style={{width: 80, height: 80, alignSelf: 'center', marginTop: 10}} />
+        <Image source={require('../assets/logo.png')} style={{width: 80, height: 80, alignSelf: 'center', marginTop: 20}} />
         <Text style={styles.description}>Match The Similar Colors</Text>
 
         <View style={{flexDirection: 'row'}}>
@@ -82,9 +93,9 @@ export default class Screen1 extends React.Component {
 
           <View style={{width: 2, height: '80%', backgroundColor: 'white', alignSelf: 'center', borderRadius: 50, zIndex: -1}} />
 
-          <View style={styles.container}>
-            <Animated.Image ref={view=>{this.triangle=view}} source={require('../assets/fruits/green.png')}
-            style={[styles.shape, {opacity: this.trOp}]} />
+          <View style={styles.container}>            
+            <Animated.Image ref={view=>{this.square=view}} source={require('../assets/fruits/orange_c.png')}
+            style={[styles.shape, {opacity: this.sqOp}]} />            
 
             <Animated.Image ref={view=>{this.star=view}} source={require('../assets/fruits/yellow.png')}
             style={[styles.shape, {opacity: this.stOp}]} />
@@ -92,18 +103,21 @@ export default class Screen1 extends React.Component {
             <Animated.Image ref={view=>{this.circle=view}} source={require('../assets/fruits/red.png')}
             style={[styles.shape, {opacity: this.ciOp}]} />
 
-            <Animated.Image ref={view=>{this.square=view}} source={require('../assets/fruits/orange_c.png')}
-            style={[styles.shape, {opacity: this.sqOp}]} />
+            <Animated.Image ref={view=>{this.triangle=view}} source={require('../assets/fruits/green.png')}
+            style={[styles.shape, {opacity: this.trOp}]} />
           </View>
         </View>
 
-        {this.state.doneArr.length==4
-        ? <Animated.View style={{position: 'absolute', bottom: this.bttonPos, alignSelf: 'center', width: '60%'}}>
-            <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate("Screen3")}} >
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        : null}
+        <TouchableOpacity style={[styles.button, {position: 'absolute', bottom: 10, left: 10, width: 100}]}
+        onPress={()=>{this.props.navigation.navigate("ActivitySelectScreen")}} >
+          <Text style={styles.buttonText}>Home</Text>
+        </TouchableOpacity>
+
+        <Animated.View style={{position: 'absolute', bottom: 10, right: 10, width: 100, transform: [{scale: this.bttonScale}]}}>
+          <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate("Screen3")}} >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     );
   }
@@ -131,8 +145,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   shape:{
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     alignSelf: 'center',
     margin: Dimensions.get("window").width/13,
     zIndex: -100,

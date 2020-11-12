@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, PanResponder, Animated } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated } from 'react-native';
 import Draggable from "../components/Draggable";
 
 export default class Screen1 extends React.Component {
@@ -16,7 +16,7 @@ export default class Screen1 extends React.Component {
     this.sqOp = new Animated.Value(1);
     this.trOp = new Animated.Value(1);
     this.stOp = new Animated.Value(1);
-    this.bttonPos = new Animated.Value(-50);
+    this.bttonScale = new Animated.Value(1);
   }
 
   measure=()=>{
@@ -45,15 +45,26 @@ export default class Screen1 extends React.Component {
     this.setState({doneArr: doneArr}, ()=>{
       Animated.timing(this[shape + "Op"], {
         toValue: 0,
-        duration: 1000,
+        duration: 200,
         useNativeDriver: true,
       }).start(()=>{
         if(doneArr.length==4){
-          Animated.timing(this.bttonPos, {
-            toValue: 50,
-            duration: 500,
-            useNativeDriver: false,
-          }).start()
+          Animated.loop(
+            Animated.sequence([
+              Animated.timing(this.bttonScale, {
+                toValue: 1.5,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+              Animated.spring(this.bttonScale, {
+                toValue: 1,
+                useNativeDriver: false,
+                duration: 500,
+                friction: 2,
+                tension: 70,
+              })
+            ]), {iterations: 2}
+          ).start();
         }
       });
     });
@@ -78,7 +89,7 @@ export default class Screen1 extends React.Component {
 
             <Draggable source={require('../assets/shapes/star.png')}
             onDone={(res)=>{this.update(res, "st")}} objPos={this.state.stPos} />
-          </View>
+            </View>
 
           <View style={{width: 2, height: '80%', backgroundColor: 'white', alignSelf: 'center', borderRadius: 50, zIndex: -1}} />
 
@@ -97,13 +108,16 @@ export default class Screen1 extends React.Component {
           </View>
         </View>
 
-        {this.state.doneArr.length==4
-        ? <Animated.View style={{position: 'absolute', bottom: this.bttonPos, alignSelf: 'center', width: '60%'}}>
-            <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate("Screen2")}} >
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        : null}
+        <TouchableOpacity style={[styles.button, {position: 'absolute', bottom: 10, left: 10, width: 100}]}
+        onPress={()=>{this.props.navigation.navigate("ActivitySelectScreen")}} >
+          <Text style={styles.buttonText}>Home</Text>
+        </TouchableOpacity>
+
+        <Animated.View style={{position: 'absolute', bottom: 10, right: 10, width: 100, transform: [{scale: this.bttonScale}]}}>
+          <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate("Screen2")}} >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     );
   }
@@ -117,7 +131,9 @@ const styles = StyleSheet.create({
     padding: 7,
     width: '100%',
     alignItems: 'center',
-    backgroundColor: 'white',  },
+    backgroundColor: 'white',
+    width: '100%',
+  },
   buttonText:{
     color: '#faae19',
     fontSize: 18,
@@ -131,8 +147,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   shape:{
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     alignSelf: 'center',
     margin: Dimensions.get("window").width/13,
   },
